@@ -1,0 +1,53 @@
+#include <deque>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <fstream>
+
+using namespace std;
+
+class bank {
+    string name;
+    double bet;
+    string valuta;
+    string perc;
+public:
+    bank(string n, double b, string v, string p) : name(n), bet(b), valuta(v), perc(p) {}
+    bank() :name(""), bet(0.0), valuta(""), perc("") {}
+
+    void print(ostream& os) const {
+        os << name << " " << bet << " " << valuta << " " << perc << endl;
+    }
+
+    bool operator<(const bank& other) const {
+        return name < other.name;
+    }
+};
+
+int main() {
+    vector<bank> t;
+    ifstream file("input.txt");
+
+    string name, valuta, perc;
+    double bet;
+
+    while (file >> name >> bet >> valuta >> perc) {
+        t.emplace_back(name, bet, valuta, perc);
+    }
+
+    file.close();
+
+    sort(t.begin(), t.end());
+    deque<bank> d;
+    std::copy(t.begin(), t.end(), back_inserter(d));
+    ofstream outFile("output.txt");
+
+    for (const auto& f : d) {
+        f.print(outFile);
+    }
+
+    outFile.close();
+
+    return 0;
+}
